@@ -9,9 +9,9 @@
 #include <QListWidget>
 #include <QMessageBox>
 #include <QMenu>
-#include "mainwindow.h" // Включаем заголовок с функцией createStyledButton
+#include "StyledButtonFactory.h" // Добавляем заголовок для StyledButtonFactory
 
-MainAppWindow::MainAppWindow(QWidget *parent)
+MainAppWindow::MainAppWindow(QWidget* parent)
     : QWidget(parent), balance(0.0)
 {
     setupUI();
@@ -29,24 +29,24 @@ void MainAppWindow::setupUI()
     setStyleSheet("background-color: #FCFAFA;");
 
     // Создаем главный вертикальный layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QVBoxLayout* mainLayout = new QVBoxLayout(this);
 
     // Добавляем прямоугольный слот с закругленными краями
-    QFrame *roundedSlot = new QFrame(this);
+    QFrame* roundedSlot = new QFrame(this);
     roundedSlot->setFixedSize(300, 200); // Устанавливаем размер слота
     roundedSlot->setStyleSheet("QFrame {"
-                               "background-color: #A4B8C4;"
-                               "border-radius: 20px;"
-                               "}");
+        "background-color: #A4B8C4;"
+        "border-radius: 20px;"
+        "}");
 
     // Добавляем круглое кольцо поверх слота
-    QFrame *ringFrame = new QFrame(roundedSlot);
+    QFrame* ringFrame = new QFrame(roundedSlot);
     ringFrame->setGeometry(25, 25, 250, 250); // Устанавливаем размер и позицию кольца
     ringFrame->setStyleSheet("QFrame {"
-                             "background-color: transparent;" // Прозрачный фон
-                             "border: 20px solid #6E8387;" // Темно-серый цвет и увеличенная толщина границы
-                             "border-radius: 125px;" // Круглая форма
-                             "}");
+        "background-color: transparent;" // Прозрачный фон
+        "border: 20px solid #6E8387;" // Темно-серый цвет и увеличенная толщина границы
+        "border-radius: 125px;" // Круглая форма
+        "}");
 
     // Создаем QLabel для отображения баланса внутри круга
     balanceLabel = new QLabel("Баланс: 0", ringFrame);
@@ -56,8 +56,8 @@ void MainAppWindow::setupUI()
     balanceLabel->setStyleSheet("background-color: transparent; border: none;"); // Убираем рамку и фон
     balanceLabel->setGeometry(25, 50, 200, 50); // Устанавливаем позицию и размер метки
 
-    // Создаем кнопку для изменения баланса с помощью функции createStyledButton
-    changeBalanceButton = MainWindow::createStyledButton("Изменить", ringFrame);
+    // Создаем кнопку для изменения баланса с использованием StyledButtonFactory
+    changeBalanceButton = StyledButtonFactory::createStyledButton("Изменить", ringFrame);
     changeBalanceButton->setGeometry(50, 120, 150, 30); // Устанавливаем позицию и размер кнопки
     connect(changeBalanceButton, &QPushButton::clicked, this, &MainAppWindow::onChangeBalanceButtonClicked);
 
@@ -69,37 +69,37 @@ void MainAppWindow::setupUI()
     mainLayout->addWidget(transactionsList, 0, Qt::AlignCenter); // Располагаем список по центру
 
     // Создаем горизонтальный layout для кнопок "Расходы" и "Доходы"
-    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    QHBoxLayout* buttonLayout = new QHBoxLayout;
     buttonLayout->setSpacing(20);
 
     // Создаем кнопку "Расходы"
     expensesButton = new QPushButton("Расходы", this);
     expensesButton->setFixedSize(150, 40);
     expensesButton->setStyleSheet("QPushButton {"
-                                  "background-color: #A4B8C4;"
-                                  "color: white;"
-                                  "font-size: 16px;"
-                                  "border-radius: 20px;"
-                                  "border: 2px solid #8E9EAB;"
-                                  "}"
-                                  "QPushButton:hover {"
-                                  "background-color: #8E9EAB;"
-                                  "}");
+        "background-color: #A4B8C4;"
+        "color: white;"
+        "font-size: 16px;"
+        "border-radius: 20px;"
+        "border: 2px solid #8E9EAB;"
+        "}"
+        "QPushButton:hover {"
+        "background-color: #8E9EAB;"
+        "}");
     connect(expensesButton, &QPushButton::clicked, this, &MainAppWindow::onExpensesButtonClicked);
 
     // Создаем кнопку "Доходы"
     incomeButton = new QPushButton("Доходы", this);
     incomeButton->setFixedSize(150, 40);
     incomeButton->setStyleSheet("QPushButton {"
-                                "background-color: #A4B8C4;"
-                                "color: white;"
-                                "font-size: 16px;"
-                                "border-radius: 20px;"
-                                "border: 2px solid #8E9EAB;"
-                                "}"
-                                "QPushButton:hover {"
-                                "background-color: #8E9EAB;"
-                                "}");
+        "background-color: #A4B8C4;"
+        "color: white;"
+        "font-size: 16px;"
+        "border-radius: 20px;"
+        "border: 2px solid #8E9EAB;"
+        "}"
+        "QPushButton:hover {"
+        "background-color: #8E9EAB;"
+        "}");
     connect(incomeButton, &QPushButton::clicked, this, &MainAppWindow::onIncomeButtonClicked);
 
     buttonLayout->addWidget(expensesButton);
@@ -116,13 +116,13 @@ void MainAppWindow::setupUI()
 
 void MainAppWindow::onExpensesButtonClicked() {
     // Логика для обработки нажатия кнопки "Расходы"
-    ExpensesWindow *expensesWindow = new ExpensesWindow(this);
+    ExpensesWindow* expensesWindow = new ExpensesWindow(this);
     expensesWindow->show();
 }
 
 void MainAppWindow::onIncomeButtonClicked() {
     // Логика для обработки нажатия кнопки "Доходы"
-    IncomeWindow *incomeWindow = new IncomeWindow(this);
+    IncomeWindow* incomeWindow = new IncomeWindow(this);
     incomeWindow->show();
 }
 
@@ -136,14 +136,14 @@ void MainAppWindow::onChangeBalanceButtonClicked() {
     }
 }
 
-void MainAppWindow::addExpense(const QString &category, double amount, const QString &date) {
+void MainAppWindow::addExpense(const QString& category, double amount, const QString& date) {
     QString transaction = QString("%1 -%2   Дата: %3").arg(category).arg(amount).arg(date);
     transactionsList->addItem(transaction);
     balance -= amount;
     balanceLabel->setText(QString("Баланс: %1").arg(balance));
 }
 
-void MainAppWindow::addIncome(const QString &category, double amount, const QString &date) {
+void MainAppWindow::addIncome(const QString& category, double amount, const QString& date) {
     QString transaction = QString("%1 +%2   Дата: %3").arg(category).arg(amount).arg(date);
     transactionsList->addItem(transaction);
     balance += amount;
