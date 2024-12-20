@@ -4,9 +4,9 @@
 #include "mainappwindow.h" // Добавляем заголовок для MainAppWindow
 #include "data_base.h"
 #include <QMessageBox>
-#include "mainwindow.h" // Включаем заголовок с функцией createStyledButton
+#include "StyledButtonFactory.h" // Добавляем заголовок для StyledButtonFactory
 
-LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent)
+LoginWindow::LoginWindow(QWidget* parent) : QWidget(parent)
 {
     // Устанавливаем фиксированный размер окна
     setFixedSize(450, 600);
@@ -18,7 +18,7 @@ LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent)
     setStyleSheet("background: #FCFAFA;");
 
     // Создаем главный вертикальный layout
-    QVBoxLayout *loginMainLayout = new QVBoxLayout(this);
+    QVBoxLayout* loginMainLayout = new QVBoxLayout(this);
 
     // Создаем QLabel для надписи "Логин"
     loginLabel = new QLabel("Логин", this);
@@ -45,26 +45,18 @@ LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent)
     passwordEdit->setStyleSheet("QLineEdit { border: 2px solid #C8D3D5; border-radius: 20px; padding: 8px; background-color: white; selection-background-color: darkgray; min-width: 150px; min-height: 35px; font-size: 16px; }");
     loginMainLayout->addWidget(passwordEdit);
 
-    // Создаем кнопку "Показать пароль" с помощью функции createStyledButton
-    showPasswordButton = MainWindow::createStyledButton("Показать пароль", this);
+    // Создаем кнопку "Показать пароль" с использованием StyledButtonFactory
+    showPasswordButton = StyledButtonFactory::createStyledButton("Показать пароль", this);
+    showPasswordButton->setFixedSize(130, 30);
+    connect(showPasswordButton, &QPushButton::clicked, this, &LoginWindow::onShowPasswordButtonClicked);
     loginMainLayout->addWidget(showPasswordButton);
 
-    // Создаем кнопку "Войти"
-    loginButton = new QPushButton("Войти", this);
+    // Создаем кнопку "Войти" с использованием StyledButtonFactory
+    loginButton = StyledButtonFactory::createStyledButton("Войти", this);
     loginButton->setFixedSize(150, 40);
-    loginButton->setStyleSheet( "QPushButton {"
-                               "background-color: #A4B8C4;"
-                               "color: white;"
-                               "font-size: 16px;"
-                               "border-radius: 20px;"
-                               "border: 2px solid #8E9EAB;"
-                               "}"
-                               "QPushButton:hover {"
-                               "background-color: #8E9EAB;"
-                               "}");
 
     // Добавляем тень к кнопке
-    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(this);
+    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect(this);
     shadowEffect->setBlurRadius(20);
     shadowEffect->setColor(QColor(0, 0, 0, 80));
     shadowEffect->setOffset(0, 4);
@@ -86,9 +78,6 @@ LoginWindow::LoginWindow(QWidget *parent) : QWidget(parent)
 
     // Устанавливаем центральный виджет и layout
     setLayout(loginMainLayout);
-
-    // Подключаем сигнал нажатия кнопки к слоту
-    connect(showPasswordButton, &QPushButton::clicked, this, &LoginWindow::onShowPasswordButtonClicked);
 }
 
 void LoginWindow::onLoginButtonClicked() {
@@ -99,10 +88,10 @@ void LoginWindow::onLoginButtonClicked() {
     dbManager.connect();
 
     QString query = QString(
-                        "SELECT COUNT(*) AS count "
-                        "FROM users "
-                        "WHERE login = '%1' AND password = '%2';"
-                        ).arg(login, password);
+        "SELECT COUNT(*) AS count "
+        "FROM users "
+        "WHERE login = '%1' AND password = '%2';"
+    ).arg(login, password);
 
     QSqlQuery result = dbManager.fetchQuery(query);
     if (result.isActive() && result.next()) {
@@ -116,14 +105,16 @@ void LoginWindow::onLoginButtonClicked() {
             successLabel->show();
 
             // Открываем основное окно приложения
-            MainAppWindow *mainAppWindow = new MainAppWindow();
+            MainAppWindow* mainAppWindow = new MainAppWindow();
             mainAppWindow->show();
             this->close(); // Закрываем окно авторизации
-        } else {
+        }
+        else {
             // Пользователь не найден
             QMessageBox::warning(this, "Ошибка", "Неверный логин или пароль!");
         }
-    } else {
+    }
+    else {
         // Ошибка при выполнении запроса
         QMessageBox::warning(this, "Ошибка", "Произошла ошибка при выполнении запроса!");
         std::cerr << "Ошибка при выполнении запроса: " << dbManager.getLastError().toStdString() << "\n";
@@ -135,7 +126,8 @@ void LoginWindow::onShowPasswordButtonClicked() {
     if (passwordEdit->echoMode() == QLineEdit::Password) {
         passwordEdit->setEchoMode(QLineEdit::Normal);
         showPasswordButton->setText("Скрыть пароль");
-    } else {
+    }
+    else {
         passwordEdit->setEchoMode(QLineEdit::Password);
         showPasswordButton->setText("Показать пароль");
     }

@@ -7,8 +7,9 @@
 #include <QDebug>
 #include <QFont>
 #include <QGraphicsDropShadowEffect>
+#include "StyledButtonFactory.h" // Добавляем заголовок для StyledButtonFactory
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , loginWindow(nullptr)
@@ -26,11 +27,11 @@ MainWindow::MainWindow(QWidget *parent)
     setStyleSheet("background: #FCFAFA");
 
     // Создаем главный виджет и основной вертикальный layout
-    QWidget *centralWidget = new QWidget(this);
-    QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
+    QWidget* centralWidget = new QWidget(this);
+    QVBoxLayout* mainLayout = new QVBoxLayout(centralWidget);
 
     // Создаем QLabel для надписи "Добро пожаловать!"
-    QLabel *welcomeLabel = new QLabel("Добро пожаловать!", centralWidget);
+    QLabel* welcomeLabel = new QLabel("Добро пожаловать!", centralWidget);
     QFont welcomeFont("Candara Light", 15, QFont::Bold); // Изменяем шрифт
     welcomeLabel->setFont(welcomeFont);
     welcomeLabel->setAlignment(Qt::AlignCenter); // Выравниваем по центру
@@ -38,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(welcomeLabel);
 
     // Создаем QLabel для эмблемы
-    QLabel *logoLabel = new QLabel(centralWidget);
+    QLabel* logoLabel = new QLabel(centralWidget);
     QPixmap logoPixmap("/home/maksson/financial-tracker/GUI/images/кошелек.png"); // Путь к изображению
     logoLabel->setPixmap(logoPixmap.scaled(180, 180, Qt::KeepAspectRatio, Qt::SmoothTransformation)); // Масштабируем изображение
     logoLabel->setAlignment(Qt::AlignCenter); // Выравниваем по центру
@@ -46,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(logoLabel);
 
     // Создаем QLabel для надписи "Финансовый трекер"
-    QLabel *trackerLabel = new QLabel("Финансовый трекер", centralWidget);
+    QLabel* trackerLabel = new QLabel("Финансовый трекер", centralWidget);
     QFont trackerFont("Calibri Light", 11, QFont::Bold); // Изменяем шрифт
     trackerLabel->setFont(trackerFont);
     trackerLabel->setAlignment(Qt::AlignCenter); // Выравниваем по центру
@@ -54,12 +55,12 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(trackerLabel);
 
     // Создаем вертикальный layout для кнопок
-    QVBoxLayout *buttonLayout = new QVBoxLayout();
+    QVBoxLayout* buttonLayout = new QVBoxLayout();
     buttonLayout->setAlignment(Qt::AlignCenter); // Выравниваем кнопки по центру
 
-    // Создаем кнопки "Войти" и "Регистрация" с помощью функции createStyledButton
-    QPushButton *loginButton = createStyledButton("Войти", centralWidget);
-    QPushButton *registerButton = createStyledButton("Регистрация", centralWidget);
+    // Создаем кнопки "Войти" и "Регистрация" с использованием StyledButtonFactory
+    QPushButton* loginButton = StyledButtonFactory::createStyledButton("Войти", centralWidget);
+    QPushButton* registerButton = StyledButtonFactory::createStyledButton("Регистрация", centralWidget);
 
     // Устанавливаем фиксированный размер для кнопок
     int buttonWidth = 150;
@@ -109,23 +110,4 @@ void MainWindow::onRegisterButtonClicked() {
         registrationWindow = new RegistrationForm(); // Создаем новое окно без родителя
     }
     registrationWindow->show();
-}
-
-// Реализация функции для создания стилизованной кнопки
-QPushButton* MainWindow::createStyledButton(const QString& text, QWidget* parent) {
-    QPushButton* button = new QPushButton(text, parent);
-    button->setFixedSize(130, 30); // Устанавливаем фиксированный размер
-    button->setStyleSheet(
-        "QPushButton {"
-        "background-color: #6E8387;" // Основной цвет
-        "color: white;"
-        "font-size: 15px;"
-        "border-radius: 15px;"
-        "border: 2px solid #5A6E72;"
-        "}"
-        "QPushButton:hover {"
-        "background-color: #5A6E72;" // Цвет при наведении
-        "}"
-        );
-    return button;
 }

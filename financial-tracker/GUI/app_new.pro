@@ -15,6 +15,7 @@ LIBS += -L/usr/lib/mysql -lmysqlclient
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    StyledButtonFactory.cpp \
     expenseswindow.cpp \
     incomewindow.cpp \
     data_base.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     registrationform.cpp
 
 HEADERS += \
+    StyledButtonFactory.h \
     expenseswindow.h \
     incomewindow.h \
     data_base.h \
